@@ -18,6 +18,7 @@ export default function Level1({ onComplete }: { onComplete: () => void }) {
   // Initialize puzzle
   useEffect(() => {
     initializePuzzle();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Check if puzzle is solved
@@ -35,17 +36,18 @@ export default function Level1({ onComplete }: { onComplete: () => void }) {
       position: i,
     }));
 
-    // Shuffle tiles
+    // Shuffle tiles by making random valid moves
+    let emptyPos = totalTiles; // Start with empty position at the end
+    
     for (let i = 0; i < 100; i++) {
-      const emptyPos = initialTiles.findIndex((t) => t.position === totalTiles);
       const neighbors = getNeighbors(emptyPos);
       const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-      const neighbor = initialTiles.find((t) => t.position === randomNeighbor);
-      if (neighbor) {
-        [initialTiles[emptyPos].position, neighbor.position] = [
-          neighbor.position,
-          initialTiles[emptyPos].position,
-        ];
+      
+      // Find the tile at the random neighbor position and swap with empty
+      const tileIndex = initialTiles.findIndex((t) => t.position === randomNeighbor);
+      if (tileIndex !== -1) {
+        initialTiles[tileIndex].position = emptyPos;
+        emptyPos = randomNeighbor;
       }
     }
 
@@ -70,16 +72,20 @@ export default function Level1({ onComplete }: { onComplete: () => void }) {
   const handleTileClick = (tileId: number) => {
     if (isComplete) return;
 
-    const emptyPos = tiles.findIndex((t) => t.position === totalTiles);
+    // Find which position is empty (not occupied by any tile)
+    const occupiedPositions = tiles.map(t => t.position);
+    const emptyPos = Array.from({ length: gridSize * gridSize }, (_, i) => i)
+      .find(pos => !occupiedPositions.includes(pos)) ?? totalTiles;
+    
     const tileIndex = tiles.findIndex((t) => t.id === tileId);
+    if (tileIndex === -1) return;
+    
     const tilePos = tiles[tileIndex].position;
 
+    // Check if the tile is adjacent to the empty position
     if (getNeighbors(emptyPos).includes(tilePos)) {
       const newTiles = [...tiles];
-      [newTiles[emptyPos].position, newTiles[tileIndex].position] = [
-        tilePos,
-        emptyPos,
-      ];
+      newTiles[tileIndex].position = emptyPos;
       setTiles(newTiles);
       setMoves((m) => m + 1);
     }
