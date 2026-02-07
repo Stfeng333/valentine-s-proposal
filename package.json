@@ -1,0 +1,20 @@
+{
+  "name": "valentine-s-proposal",
+  "version": "1.0.0",
+  "description": "second time using node js for project",
+  "homepage": "https://github.com/Stfeng333/Valentine-s-proposal#readme",
+  "bugs": {
+    "url": "https://github.com/Stfeng333/Valentine-s-proposal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stfeng333/Valentine-s-proposal.git"
+  },
+  "license": "ISC",
+  "author": "Steven Feng",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
