@@ -1,75 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
+import Image from 'next/image';
 
 // @ts-ignore
 import confetti from 'canvas-confetti';
 
-const FINAL_MESSAGE = 'Will you be my Valentine?';
-const ENCRYPTED_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
 export default function Level3() {
-  const [displayedText, setDisplayedText] = useState('');
-  const [isDecoding, setIsDecoding] = useState(true);
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [showButton, setShowButton] = useState(false);
 
-  useEffect(() => {
-    if (!isDecoding) return;
+  const handleYesClick = () => {
+    // Trigger confetti
+    const confettiTimings = [0, 300, 600, 900];
+    confettiTimings.forEach((delay) => {
+      setTimeout(() => {
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#00ff41', '#ff1493', '#ff69b4', '#00ffff', '#ffffff'],
+        });
+      }, delay);
+    });
+  };
 
-    let currentIndex = 0;
-    const totalChars = FINAL_MESSAGE.length;
-    const decodeSpeed = 50; // milliseconds per character decode
-
-    const interval = setInterval(() => {
-      if (currentIndex < totalChars) {
-        // Generate "encrypted" version of current message
-        let encrypted = '';
-        for (let i = 0; i < totalChars; i++) {
-          if (i < currentIndex) {
-            // Already decoded
-            encrypted += FINAL_MESSAGE[i];
-          } else if (i === currentIndex) {
-            // Current character being decoded
-            encrypted += FINAL_MESSAGE[i];
-          } else {
-            // Not yet decoded - show random character
-            encrypted += ENCRYPTED_CHARS[Math.floor(Math.random() * ENCRYPTED_CHARS.length)];
-          }
-        }
-        setDisplayedText(encrypted);
-        currentIndex++;
-      } else {
-        setIsDecoding(false);
-        setDisplayedText(FINAL_MESSAGE);
-        setShowConfetti(true);
-        clearInterval(interval);
-      }
-    }, decodeSpeed);
-
-    return () => clearInterval(interval);
-  }, [isDecoding]);
-
-  useEffect(() => {
-    if (showConfetti) {
-      // Trigger confetti multiple times for better effect
-      const confettiTimings = [0, 300, 600];
-      confettiTimings.forEach((delay) => {
-        setTimeout(() => {
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#00ff41', '#ff1493', '#ff69b4', '#00ffff'],
-          });
-        }, delay);
-      });
-    }
-  }, [showConfetti]);
+  // Show button after a short delay
+  useState(() => {
+    setTimeout(() => setShowButton(true), 1000);
+  });
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-8 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-8 relative overflow-hidden px-4">
       {/* Background animated gradient */}
       <motion.div
         animate={{
@@ -80,119 +43,79 @@ export default function Level3() {
           repeat: Infinity,
           repeatType: 'reverse',
         }}
-        className="absolute inset-0 opacity-30 pointer-events-none"
+        className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
-          background: 'linear-gradient(45deg, #00ff41, #ff1493, #00ffff)',
+          background: 'linear-gradient(45deg, #ff1493, #ff69b4, #00ffff)',
           backgroundSize: '400% 400%',
         }}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 text-center"
-      >
-        <h1 className="text-4xl font-bold mb-2">Level 3: The Final Message</h1>
-        <p className="text-lg opacity-80">Decoding...</p>
-      </motion.div>
-
-      {/* Main message display */}
+      {/* Main content */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="relative z-10"
+        transition={{ duration: 0.8 }}
+        className="relative z-10 flex flex-col items-center gap-8"
       >
-        <div className="px-12 py-8 bg-black border-2 border-[#00ff41] rounded-lg shadow-2xl"
+        {/* Image */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden border-4 border-[#ff1493] shadow-2xl"
           style={{
-            boxShadow: '0 0 20px rgba(0, 255, 65, 0.5)',
+            boxShadow: '0 0 40px rgba(255, 20, 147, 0.6)',
           }}
         >
-          <div className="font-mono text-4xl font-bold tracking-wider whitespace-nowrap"
-            style={{
-              color: '#00ff41',
-              textShadow: '0 0 10px rgba(0, 255, 65, 0.8)',
-              minHeight: '60px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            {displayedText}
-          </div>
+          <Image
+            src="/valentinescats.jpg"
+            alt="Valentine's Day"
+            fill
+            className="object-cover"
+            priority
+          />
+        </motion.div>
+
+        {/* Question */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl font-bold mb-4 text-[#ff1493]" style={{
+            textShadow: '0 0 20px rgba(255, 20, 147, 0.8)',
+          }}>
+            Will you be my Valentine?
+          </h1>
           
-          {!isDecoding && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="mt-8 flex justify-center"
-            >
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
-                <Heart size={48} fill="#ff1493" color="#ff1493" />
-              </motion.div>
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
-
-      {/* Status indicators */}
-      {isDecoding ? (
-        <motion.div
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="relative z-10 text-[#00ff41] font-mono"
-        >
-          <p>Decoding message...</p>
-        </motion.div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 text-center"
-        >
-          <p className="text-2xl font-bold text-[#ff1493] mb-4">Message Decoded!</p>
-          <p className="text-lg opacity-80 max-w-md">
-            Thank you for solving the puzzles. You mean everything to me. 💕
-          </p>
-        </motion.div>
-      )}
-
-      {/* Decorative Matrix code columns */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20"
-        style={{
-          fontSize: '14px',
-          fontFamily: 'monospace',
-          color: '#00ff41',
-        }}
-      >
-        {Array.from({ length: 10 }).map((_, i) => (
           <motion.div
-            key={i}
-            animate={{ y: [0, window.innerHeight] }}
-            transition={{
-              duration: 8 + Math.random() * 4,
-              repeat: Infinity,
-              ease: 'linear',
-              delay: Math.random() * 2,
-            }}
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="flex justify-center mt-6"
+          >
+            <Heart size={60} fill="#ff1493" color="#ff1493" />
+          </motion.div>
+        </motion.div>
+
+        {/* Button */}
+        {showButton && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            onClick={handleYesClick}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-12 py-5 bg-[#ff1493] text-white text-2xl font-bold rounded-full shadow-lg hover:shadow-2xl transition-all"
             style={{
-              position: 'absolute',
-              left: `${i * 10}%`,
-              whiteSpace: 'pre',
-              lineHeight: '1.5',
+              boxShadow: '0 0 30px rgba(255, 20, 147, 0.6)',
             }}
           >
-            {Array.from({ length: 30 })
-              .map(() => ENCRYPTED_CHARS[Math.floor(Math.random() * ENCRYPTED_CHARS.length)])
-              .join('\n')}
-          </motion.div>
-        ))}
-      </div>
+            Yes yes yesssss (can't say no) 💕
+          </motion.button>
+        )}
+      </motion.div>
     </div>
   );
 }

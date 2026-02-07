@@ -134,7 +134,7 @@ export default function Level1({ onComplete }: { onComplete: () => void }) {
                 onClick={() => handleTileClick(tile.id)}
                 className="bg-cover bg-no-repeat cursor-pointer hover:opacity-90 transition-opacity border border-[#00ff41]"
                 style={{
-                  backgroundImage: 'url(/trip-photo.jpg)',
+                  backgroundImage: 'url(/valentinescats.jpg)',
                   backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`,
                   backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
                 }}
