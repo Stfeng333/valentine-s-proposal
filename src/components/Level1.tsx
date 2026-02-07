@@ -92,28 +92,53 @@ export default function Level1({ onComplete }: { onComplete: () => void }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-10 relative">
+      {/* Floating hearts background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-4xl opacity-20"
+            initial={{ y: '100vh', x: `${Math.random() * 100}vw` }}
+            animate={{
+              y: '-10vh',
+              x: `${Math.random() * 100}vw`,
+            }}
+            transition={{
+              duration: 15 + Math.random() * 10,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+            }}
+          >
+            💕
+          </motion.div>
+        ))}
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center"
+        className="text-center relative z-10"
       >
-        <h1 className="text-4xl font-bold mb-2">Level 1: Photo Puzzle</h1>
-        <p className="text-lg opacity-80">Solve the sliding puzzle to continue</p>
+        <h1 className="text-6xl font-bold mb-4">Level 1: Photo Puzzle</h1>
+        <p className="text-2xl opacity-90">Solve the sliding puzzle to continue</p>
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="p-1 bg-[#00ff41] rounded-lg"
+        className="p-2 bg-[#00ff41] rounded-2xl shadow-2xl relative z-10"
+        style={{
+          boxShadow: '0 0 40px rgba(0, 255, 65, 0.4)',
+        }}
       >
-        <div className="grid gap-0.5 bg-black p-2 rounded-lg"
+        <div className="grid gap-1 bg-black p-3 rounded-xl"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-            width: '300px',
-            height: '300px',
+            width: '450px',
+            height: '450px',
           }}
         >
           {Array.from({ length: gridSize * gridSize }).map((_, position) => {
@@ -152,20 +177,23 @@ export default function Level1({ onComplete }: { onComplete: () => void }) {
         </div>
       </motion.div>
 
-      <div className="text-center">
-        <p className="text-xl opacity-70 mb-4">Moves: {moves}</p>
+      <div className="text-center relative z-10">
+        <p className="text-3xl opacity-80 mb-6 font-bold">Moves: {moves}</p>
         {isComplete && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col gap-3"
+            className="flex flex-col gap-4"
           >
-            <p className="text-2xl font-bold text-[#00ff41]">🎉 Puzzle Complete!</p>
+            <p className="text-4xl font-bold text-[#00ff41]">🎉 Puzzle Complete!</p>
             <motion.button
               onClick={onComplete}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.08, boxShadow: '0 0 30px rgba(0, 255, 65, 0.6)' }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-[#00ff41] text-black font-bold rounded-lg hover:opacity-90"
+              className="px-10 py-4 bg-[#00ff41] text-black text-xl font-bold rounded-xl hover:opacity-90 shadow-lg"
+              style={{
+                boxShadow: '0 0 20px rgba(0, 255, 65, 0.4)',
+              }}
             >
               Next Level →
             </motion.button>
