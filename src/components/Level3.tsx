@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
@@ -27,9 +27,9 @@ export default function Level3() {
   };
 
   // Show button after a short delay
-  useState(() => {
+  useEffect(() => {
     setTimeout(() => setShowButton(true), 1000);
-  });
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-8 relative overflow-hidden px-4">
